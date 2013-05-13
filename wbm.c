@@ -161,7 +161,7 @@ void* admm_parallel_helper(void* tn){
     pthread_barrier_wait(&barr);
 
     // dual update
-    for (i = 0; i < N; i++){ 
+    for (i = low_ind; i < high_ind; i++){ 
       for (j = 0; j < N; j++){
         blk[i]->yi[j] += rho * (blk[i]->xi[j] - xi_bar[j]);
         blk[i]->ya[j] += rho * (blk[i]->xa[j] - xa_bar[j]);

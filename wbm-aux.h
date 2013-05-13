@@ -1,9 +1,9 @@
 #ifndef WBM_AUX_H
 #define WBM_AUX_H
 
-#define N     100
-#define rho   5.0
-#define tol		0.001
+#define N     150
+#define rho   10.0
+#define tol		0.0001
 
 typedef struct {
   double*   w;        // weights
