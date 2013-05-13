@@ -1,9 +1,6 @@
 #ifndef WBM_AUX_H
 #define WBM_AUX_H
 
-#define N     150
-#define rho   10.0
-#define tol		0.0001
 
 typedef struct {
   double*   w;        // weights
@@ -16,9 +13,18 @@ typedef struct {
   int       ind;			// the index of the corresponding ad
 } block;
 
+#define N           150
+#define rho         10.0
+#define tol         0.001
+#define n_threads   4
+
+// pthread_barrier_t barr, all_done;
 block** blk;
 double* xa_bar;
 double* xi_bar;
+double tolerence;
+double** xab_aux;
+double** xib_aux;
 
 void project(double* xab, double* xib, block* b);
 

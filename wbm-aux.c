@@ -11,7 +11,7 @@ void project(double* xab, double* xib, block* b){
   // check which constraints are satisfied
   for (i = 0; i < N; i++){
     res[i] = b->w[i] - xab[b->ind] - xib[i];
-    if (res[i] < tol){
+    if (res[i] < tolerence){
       b->lmbd[i] = 0.0;
     }
     else {
@@ -35,13 +35,13 @@ void project(double* xab, double* xib, block* b){
     // co-ordinate search
     sat = 1;
     for (i = 0; i < N; i++){
-      if (b->lmbd[i] + b->lmbd_sum - res[i] < -tol){
+      if (b->lmbd[i] + b->lmbd_sum - res[i] < -tolerence){
         ic = i;
         sat = 0;
         break;
       }
-      else if((b->lmbd[i] > tol) & 
-              (fabs(b->lmbd[i] + b->lmbd_sum - res[i]) > tol)){
+      else if((b->lmbd[i] > tolerence) & 
+              (fabs(b->lmbd[i] + b->lmbd_sum - res[i]) > tolerence)){
         ic = i;
         sat = 0;
         break;
