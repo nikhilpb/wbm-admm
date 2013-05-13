@@ -1,5 +1,5 @@
 CC=gcc
 OFLAGS=-O2
 
-wbm: wbm-serial.o wbm-aux.o
-	$(CC) $(OFLAGS) -o wbm-serial wbm-serial.c wbm-aux.c -I.
+wbm: wbm.o wbm-aux.o
+	$(CC) $(OFLAGS) -o wbm wbm.c wbm-aux.c -I.
