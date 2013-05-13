@@ -176,7 +176,7 @@ void admm_parallel(){
   pthread_t threads[n_threads];
   pthread_barrier_init(&barr, NULL, n_threads);
   pthread_barrier_init(&all_done, NULL, n_threads + 1);
-  int t;
+  long t;
   for (t = 0; t < n_threads; t++){
     pthread_create(&threads[t],
                   NULL, 
