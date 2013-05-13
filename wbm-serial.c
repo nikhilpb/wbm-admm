@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include "wbm-aux.h"
 
-#define N     10
+#define N     100
 #define rho   5.0
 
 typedef struct {
@@ -12,9 +13,9 @@ typedef struct {
   double*   xi;       // primal variable, impression
   double*   lmbd;     // dual variables
   double    lmbd_sum; // sum of dual variables
-  double*   ya;
-  double*   yi;
-  int       ind;
+  double*   ya;				// dual variable advertiser		  
+  double*   yi;				// dual variable impression
+  int       ind;			// the index of the corresponding ad
 } block;
 
 double tol = 0.001;
