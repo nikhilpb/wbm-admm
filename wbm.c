@@ -47,22 +47,22 @@ int main(){
   double time_spent;
 
   begin = clock();
-  admm_serial();
+  admm_parallel();
   end = clock();
 
   time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
-  // printf("xa: ");
-  // for (i = 0; i < N; i++){
-  //   printf("%f ", xi_bar[i]);
-  // }
-  // printf("\n");
+  printf("xa: ");
+  for (i = 0; i < N; i++){
+    printf("%f ", xi_bar[i]);
+  }
+  printf("\n");
 
-  // printf("xi: ");
-  // for (i = 0; i < N; i++){
-  //   printf("%f ", xa_bar[i]);
-  // }
-  // printf("\n");
+  printf("xi: ");
+  for (i = 0; i < N; i++){
+    printf("%f ", xa_bar[i]);
+  }
+  printf("\n");
 
   printf("solution successful.\ntime required is: %f seconds\n", time_spent);
 
