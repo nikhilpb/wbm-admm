@@ -13,18 +13,13 @@ typedef struct {
   int       ind;			// the index of the corresponding ad
 } block;
 
-#define N           150
-#define rho         10.0
-#define tol         0.001
-#define n_threads   4
+#define N           100
+#define rho         8.0
+#define tol         0.0001
+#define min_tol     0.00001
+#define n_threads   10
 
-// pthread_barrier_t barr, all_done;
-block** blk;
-double* xa_bar;
-double* xi_bar;
-double tolerence;
-double** xab_aux;
-double** xib_aux;
+double tolerence; 
 
 void project(double* xab, double* xib, block* b);
 
