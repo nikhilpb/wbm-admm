@@ -4,91 +4,25 @@
 #include <time.h>
 #include <pthread.h>
 #include "wbm-aux.h"
+#include "wbm.h"
 
-block**   blk;
-double*   xa_bar;
-double*   xi_bar;
 double**  xab_aux;
 double**  xib_aux;
 
-void admm_serial();
-
-void dual_update(int low, int high);
-
-void project_all(int low, int high, long tid);
-
-void average();
-
-void admm_parallel();
-
-int main(){
-  int i, j, t;
-  double** w    = (double**)malloc(N * sizeof(double*));
-  
-  // made up w
-  for (i = 0; i < N; i++){
-    w[i] = (double*)malloc(N * sizeof(double));
-    for (j = 0; j < N; j++){
-      if (i == j){
-        w[i][j] = i;
-      } 
-      else{
-        w[i][j] = 0.0;
-      }
-    }
-  }
-
-  // initialize global variabless
-  blk = (block**)malloc(N * sizeof(block*));
-  for (i = 0; i < N; i++){
-    blk[i] = (block*)malloc(sizeof(block));
-    init_block(blk[i], w[i], i);
-  }
-  
-  xa_bar = (double*)malloc(N * sizeof(double));
-  xi_bar = (double*)malloc(N * sizeof(double));
-  for (i = 0; i < N; i++){
-    xa_bar[i] = 0.0;
-    xi_bar[i] = 0.0;
-  }
-
+void init(){
+  int i;
   xab_aux    = (double**)malloc(n_threads * sizeof(double*));
   xib_aux    = (double**)malloc(n_threads * sizeof(double*));
   for (i = 0; i < n_threads; i++){
     xab_aux[i] = (double*)malloc(N * sizeof(double));
     xib_aux[i] = (double*)malloc(N * sizeof(double));
   }
-
-  admm_parallel();
-
-  // printf("xa: ");
-  // for (i = 0; i < N; i++){
-  //   printf("%f ", xi_bar[i]);
-  // }
-  // printf("\n");
-
-  // printf("xi: ");
-  // for (i = 0; i < N; i++){
-  //   printf("%f ", xa_bar[i]);
-  // }
-  // printf("\n");
-  double obj = 0.0;
-  for (i = 0; i < N; i++){
-    obj += xi_bar[i] + xa_bar[i];
-  }
-  printf("objective: %f\n", obj);
-
-  for (i = 0; i < N; i++){
-    free_block(blk[i]);
-    free(blk[i]);
-  }
-  free(blk);
 }
 
 void admm_serial(){
   int i, j, t;
 	tolerence = tol;
-  
+  init();
   // ADMM steps
 
   for (t = 0; t < 1000; t++){
@@ -113,6 +47,7 @@ void* admm_parallel_helper(void* tn){
 void admm_parallel(){
   int t;
   long i;
+  init();
   tolerence = tol;
   pthread_t threads[n_threads];
 

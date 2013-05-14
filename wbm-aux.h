@@ -14,10 +14,10 @@ typedef struct {
 } block;
 
 #define N           100
-#define rho         8.0
+#define rho         5.0
 #define tol         0.0001
 #define min_tol     0.00001
-#define n_threads   10
+
 
 double tolerence; 
 
