@@ -81,7 +81,6 @@ void command_line_parser(int argc, char **argv){
         rho = atof(optarg);
         break;
       case 'n':
-        printf("blah\n");
         N = atoi(optarg);
       case 't':
         n_threads = atoi(optarg);

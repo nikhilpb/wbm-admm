@@ -4,7 +4,7 @@ from subprocess import call
 import time, sys
 
 args = sys.argv
-args[0] = "./lp"
+args[0] = "./wbm-admm.out"
 start_time = time.time()
 call(args)
 print "execution took ",time.time() - start_time, "seconds"
