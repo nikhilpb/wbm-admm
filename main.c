@@ -60,7 +60,7 @@ int main(int argc, char **argv){
   double target_obj = N*(N-1)/2.0;
   double err_p = fabs((target_obj - obj)/target_obj);
 
-  printf("objective: %f, target_obj: %f, error: %f\n ", obj, target_obj, err_p);
+  printf("objective: %f, target_obj: %f, error: %f\n", obj, target_obj, err_p);
 
   for (i = 0; i < N; i++){
     free_block(blk[i]);
