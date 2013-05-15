@@ -20,6 +20,8 @@ int N;
 
 void project(double* xab, double* xib, block* b, double tolerance);
 
+void project_range(double* xab, double* xib, block* b, double tolerance, int low, int high);
+
 void print_block(block* b);
 
 void init_block(block* b, double* w, int ind);

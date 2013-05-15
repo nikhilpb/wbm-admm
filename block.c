@@ -81,6 +81,90 @@ void project(double* xab, double* xib, block* b, double tolerence){
   return;
 }
 
+void project_range( double* xab, 
+                    double* xib, 
+                    block* b, 
+                    double tolerence, 
+                    int low, 
+                    int high){
+  int rng = high - low;
+  double* res = (double*)malloc(rng * sizeof(double));
+  int* ind_set = (int*)malloc(rng * sizeof(int));
+
+  int i, ic;
+  int sat = 1;
+  
+  // check which constraints are satisfied
+  int count = 0;
+  for (i = low; i < high; i++){
+    res[i] = b->w[i] - xab[b->ind] - xib[i];
+    if (res[i] < tolerence){
+      b->lmbd[i] = 0.0;
+    }
+    else {
+      ind_set[count] = i;
+      count++;
+      sat = 0;
+    }
+  }
+  
+  // if all constraints are satisfied set x = xb and quit
+  if (sat){
+    for (i = low; i < high; i++){
+      b->xi[i] = xib[i];
+      b->xa[i] = xab[i];
+    }
+    free(res);
+    return;
+  }
+
+  // main loop of the projection function
+  double ln, lo;
+  int ind;
+  while(1){
+    // co-ordinate search
+    sat = 1;
+    for (i = 0; i < count; i++){
+      ind = ind_set[i];
+      if (b->lmbd[ind] + b->lmbd_sum - res[ind] < -tolerence){
+        ic = ind;
+        sat = 0;
+        break;
+      }
+      else if((b->lmbd[ind] > tolerence) & 
+              (fabs(b->lmbd[ind] + b->lmbd_sum - res[ind]) > tolerence)){
+        ic = ind;
+        sat = 0;
+        break;
+      }
+    }
+
+    // if no direction exists, update x and break
+    if (sat){
+      for (i = 0; i < N; i++){
+        b->xi[i] = xib[i] + b->lmbd[i];
+        b->xa[i] = xab[i];
+      }
+      b->xa[b->ind] = xab[b->ind] + b->lmbd_sum;
+      break;
+    }
+
+    // update lambda and sum of lambdas
+    lo = b->lmbd[ic];
+    ln =  (res[ic] - b->lmbd_sum + b->lmbd[ic])/2.0;
+    if (ln >= 0.0){
+      b->lmbd[ic] = ln;
+    }
+    else{
+      b->lmbd[ic] = 0.0; 
+    }
+    b->lmbd_sum += b->lmbd[ic] - lo;
+  }
+
+  free(res);
+  return;
+}
+
 void print_block(block* b){ 
   int i;
 
