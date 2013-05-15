@@ -4,18 +4,22 @@
 #include "block.h"
 
 void project(double* xab, double* xib, block* b, double tolerence){
-  double* res;
-  res = (double*)malloc(N * sizeof(double));
+  double* res = (double*)malloc(N * sizeof(double));
+  int* ind_set = (int*)malloc(N * sizeof(int));
+
   int i, ic;
   int sat = 1;
   
   // check which constraints are satisfied
+  int count = 0;
   for (i = 0; i < N; i++){
     res[i] = b->w[i] - xab[b->ind] - xib[i];
     if (res[i] < tolerence){
       b->lmbd[i] = 0.0;
     }
     else {
+      ind_set[count] = i;
+      count++;
       sat = 0;
     }
   }
@@ -32,18 +36,20 @@ void project(double* xab, double* xib, block* b, double tolerence){
 
   // main loop of the projection function
   double ln, lo;
+  int ind;
   while(1){
     // co-ordinate search
     sat = 1;
-    for (i = 0; i < N; i++){
-      if (b->lmbd[i] + b->lmbd_sum - res[i] < -tolerence){
-        ic = i;
+    for (i = 0; i < count; i++){
+      ind = ind_set[i];
+      if (b->lmbd[ind] + b->lmbd_sum - res[ind] < -tolerence){
+        ic = ind;
         sat = 0;
         break;
       }
-      else if((b->lmbd[i] > tolerence) & 
-              (fabs(b->lmbd[i] + b->lmbd_sum - res[i]) > tolerence)){
-        ic = i;
+      else if((b->lmbd[ind] > tolerence) & 
+              (fabs(b->lmbd[ind] + b->lmbd_sum - res[ind]) > tolerence)){
+        ic = ind;
         sat = 0;
         break;
       }

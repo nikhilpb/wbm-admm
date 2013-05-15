@@ -2,7 +2,8 @@
 #define WBM_H
 #include "block.h"
 
-#define n_threads   10
+int n_threads;
+double rho;
 
 block**   blk;
 double*   xa_bar;

@@ -13,8 +13,8 @@ typedef struct {
   int       ind;			// the index of the corresponding ad
 } block;
 
-#define N           100
-#define rho         5.0
+int N;
+
 #define tol         0.0001
 #define min_tol     0.00001
 
