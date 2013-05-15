@@ -18,7 +18,7 @@ int main(int argc, char **argv){
 
   command_line_parser(argc, argv);
 
-  printf ("rho = %f, N = %d\n", rho, N);
+  printf ("rho = %f, N = %d, num of threads = %d \n", rho, N, n_threads);
   
   int i, j, t;
   double** w    = (double**)malloc(N * sizeof(double*));
@@ -73,7 +73,7 @@ void command_line_parser(int argc, char **argv){
   int index;
   int c;
   opterr = 0;
-  while ((c = getopt (argc, argv, "r:n:")) != -1)
+  while ((c = getopt (argc, argv, "r:n:t:")) != -1)
     switch (c)
     {
       case 'r':
@@ -81,6 +81,8 @@ void command_line_parser(int argc, char **argv){
         break;
       case 'n':
         N = atoi(optarg);
+      case 't':
+        n_threads = atoi(optarg);
         break;
       case '?':
         if ((optopt == 'n') || (optopt == 'r'))
