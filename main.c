@@ -6,42 +6,60 @@
 #include <ctype.h>
 #include <math.h>
 
+/*
+ * Flag options:
+ *  -n : size of the problem
+ *  -t : number of threads
+ *  -r : rho
+ *  -b : blocks per thread
+ *  -l : tolerance
+ *  -m : min tolerance
+ *  -w : weighted matching
+ */
+
+double** w;
+int w_flag;
+
+void gen_w();
+
 void command_line_parser(int argc, char **argv);
 
 int main(int argc, char **argv){
 
   // default values
 
+
+
   N = 100;
   n_threads = 10;
   rho = 5.0;
-  blks_per_ad = 2;
+  blks_per_ad = 1;
+  tol = 0.001;
+  min_tol = 0.00001;
+  w_flag = 0;
+  
 
   command_line_parser(argc, argv);
 
-  printf ("rho = %f, N = %d, num of threads = %d \n", rho, N, n_threads);
+  printf("rho = %f, N = %d, num of threads = %d, blocks_per_ad = %d\n", 
+          rho, 
+          N, 
+          n_threads,
+          blks_per_ad);
+
+  bc = N * blks_per_ad;
   
   int i, j, t;
-  double** w    = (double**)malloc(N * sizeof(double*));
   
-  // made up w
-  for (i = 0; i < N; i++){
-    w[i] = (double*)malloc(N * sizeof(double));
-    for (j = 0; j < N; j++){
-      if (i == j){
-        w[i][j] = i;
-      } 
-      else{
-        w[i][j] = 0.0;
-      }
-    }
-  }
+  gen_w();
 
   // initialize global variabless
-  blk = (block**)malloc(N * sizeof(block*));
-  for (i = 0; i < N; i++){
+  int adi;
+  blk = (block**)malloc(bc * sizeof(block*));
+  for (i = 0; i < bc; i++){
+    adi = i / blks_per_ad;
     blk[i] = (block*)malloc(sizeof(block));
-    init_block(blk[i], w[i], i);
+    init_block(blk[i], w[adi], adi);
   }
   
   xa_bar = (double*)malloc(N * sizeof(double));
@@ -58,7 +76,13 @@ int main(int argc, char **argv){
   for (i = 0; i < N; i++){
     obj += xi_bar[i] + xa_bar[i];
   }
-  double target_obj = N*(N-1)/2.0;
+  double target_obj;
+  if (w_flag){
+    target_obj = N * (N - 1)/ 2.0;
+  }
+  else {
+    target_obj = N;
+  }
   double err_p = fabs((target_obj - obj)/target_obj);
 
   printf("objective: %f, target_obj: %f, error: %f\n", obj, target_obj, err_p);
@@ -74,17 +98,23 @@ void command_line_parser(int argc, char **argv){
   int index;
   int c;
   opterr = 0;
-  while ((c = getopt (argc, argv, "r:n:t:")) != -1)
+  while ((c = getopt (argc, argv, "r:n:t:b:w")) != -1)
     switch (c)
     {
       case 'r':
         rho = atof(optarg);
         break;
       case 'n':
-        printf("blah\n");
+        printf("\n");
         N = atoi(optarg);
       case 't':
         n_threads = atoi(optarg);
+        break;
+      case 'b':
+        blks_per_ad = atoi(optarg);
+        break;
+      case 'w':
+        w_flag = 1;
         break;
       case '?':
         if ((optopt == 'n') || (optopt == 'r'))
@@ -98,4 +128,27 @@ void command_line_parser(int argc, char **argv){
       default:
         abort ();
     }
+}
+
+
+void gen_w(){
+  w    = (double**)malloc(N * sizeof(double*));
+  int i, j;
+  // made up w
+  for (i = 0; i < N; i++){
+    w[i] = (double*)malloc(N * sizeof(double));
+    for (j = 0; j < N; j++){
+      if (i == j){
+        if (w_flag){
+          w[i][j] = i;
+        }
+        else {
+          w[i][j] = 1.0;
+        }
+      } 
+      else{
+        w[i][j] = 0.0;
+      }
+    }
+  }
 }

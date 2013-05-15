@@ -5,6 +5,9 @@
 int n_threads;
 double rho;
 int blks_per_ad;
+int bc;
+double tol;
+double min_tol;
 
 block**   blk;
 double*   xa_bar;
