@@ -98,7 +98,7 @@ void command_line_parser(int argc, char **argv){
   int index;
   int c;
   opterr = 0;
-  while ((c = getopt (argc, argv, "r:n:t:b:w")) != -1)
+  while ((c = getopt (argc, argv, "r:n:t:b:wlm")) != -1)
     switch (c)
     {
       case 'r':
@@ -115,6 +115,12 @@ void command_line_parser(int argc, char **argv){
       case 'w':
         w_flag = 1;
         break;
+			case 'l':
+				tol = atof(optarg);
+				break;
+			case 'm':
+				min_tol = atof(optarg);
+				break;
       case '?':
         if ((optopt == 'n') || (optopt == 'r'))
           fprintf (stderr, "Option -%c requires an argument.\n", optopt);

@@ -17,4 +17,6 @@
 *.app
 
 # python
-#.pyc
+*.pyc
+
+*.txt
