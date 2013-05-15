@@ -3,13 +3,9 @@
 #include <math.h>
 #include "block.h"
 
-void allocate(double* res){
-  res = (double*)malloc(N * sizeof(double));
-}
-
 void project(double* xab, double* xib, block* b, double tolerence){
   double* res;
-  allocate(res);
+  res = (double*)malloc(N * sizeof(double));
   int i, ic;
   int sat = 1;
   
