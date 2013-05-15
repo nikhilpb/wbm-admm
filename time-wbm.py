@@ -1,8 +1,10 @@
 #!/usr/bin/python
 
 from subprocess import call
-import time
+import time, sys
 
+args = sys.argv
+args[0] = "./wbm.out"
 start_time = time.time()
-call(["./wbm.out"])
+call(args)
 print "execution took ",time.time() - start_time, "seconds"

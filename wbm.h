@@ -4,6 +4,7 @@
 
 int n_threads;
 double rho;
+int blks_per_ad;
 
 block**   blk;
 double*   xa_bar;
