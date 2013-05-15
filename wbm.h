@@ -1,6 +1,6 @@
 #ifndef WBM_H
 #define WBM_H
-#include "wbm-aux.h"
+#include "block.h"
 
 #define n_threads   10
 
@@ -16,6 +16,12 @@ void project_all(int low, int high, long tid);
 
 void average();
 
-void admm_parallel();
+void admm_parallel_v1();
+
+void admm_parallel_v2();
+
+void average_thr(int low, int high, long tid);
+
+void aggregate();
 
 #endif

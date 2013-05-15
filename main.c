@@ -1,5 +1,5 @@
 #include "wbm.h"
-#include "wbm-aux.h"
+#include "block.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -34,21 +34,9 @@ int main(){
     xi_bar[i] = 0.0;
   }
 
-  
-
-  admm_parallel();
+  admm_parallel_v1();
 
   // printf("xa: ");
-  // for (i = 0; i < N; i++){
-  //   printf("%f ", xi_bar[i]);
-  // }
-  // printf("\n");
-
-  // printf("xi: ");
-  // for (i = 0; i < N; i++){
-  //   printf("%f ", xa_bar[i]);
-  // }
-  // printf("\n");
   double obj = 0.0;
   for (i = 0; i < N; i++){
     obj += xi_bar[i] + xa_bar[i];
