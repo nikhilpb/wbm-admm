@@ -15,9 +15,6 @@ typedef struct {
 
 int N;
 
-#define tol         0.0001
-#define min_tol     0.00001
-
 void project(double* xab, double* xib, block* b, double tolerance);
 
 void project_range(double* xab, double* xib, block* b, double tolerance, int low, int high);

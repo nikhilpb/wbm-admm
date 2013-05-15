@@ -40,16 +40,17 @@ void admm_serial(){
     if (tolerence < min_tol) {
       tolerence = min_tol;
     }
-    dual_update(0, N);
-    project_all(0, N, 0); 
+
+    dual_update(0, bc);
+    project_all(0, bc, 0); 
     average();
   }
 }
 
 void* admm_parallel_helper(void* tn){
   long tid = (long)tn;
-  int low = tid * N / n_threads;
-  int high = (tid + 1) * N / n_threads;
+  int low = tid * bc / n_threads;
+  int high = (tid + 1) * bc / n_threads;
   dual_update(low, high);
   project_all(low, high, tid); 
   return (void*)NULL;
@@ -128,12 +129,23 @@ void dual_update(int low, int high){
 
 void project_all(int low, int high, long tid){
   int i, j;
+  int adi, ci, clow, chigh;
   for (i = low; i < high; i++){
     for (j = 0; j < N; j++){
       xab_aux[tid][j] = xa_bar[j] - (1.0 + blk[i]->ya[j])/rho;
       xib_aux[tid][j] = xi_bar[j] - (1.0 + blk[i]->yi[j])/rho;
     }
-    project(xab_aux[tid], xib_aux[tid], blk[i], tolerence);
+
+    adi = i / blks_per_ad;
+    ci = i - adi * blks_per_ad;
+    clow = ci * N / blks_per_ad;
+    chigh = (ci + 1) * N / blks_per_ad;
+    project_range(xab_aux[tid], 
+                  xib_aux[tid], 
+                  blk[i], 
+                  tolerence,
+                  clow,
+                  chigh);
   } 
 }
 
@@ -170,11 +182,11 @@ void average(){
   for (i = 0; i < N; i++){
     xa_bar[i] = 0.0;
     xi_bar[i] = 0.0;
-    for (j = 0; j < N; j++){
+    for (j = 0; j < bc; j++){
       xa_bar[i] += blk[j]->xa[i];
       xi_bar[i] += blk[j]->xi[i];
     }
-    xi_bar[i] = xi_bar[i] / N;
-    xa_bar[i] = xa_bar[i] / N;
+    xi_bar[i] = xi_bar[i] / bc;
+    xa_bar[i] = xa_bar[i] / bc;
   }
 }

@@ -88,8 +88,8 @@ void project_range( double* xab,
                     int low, 
                     int high){
   int rng = high - low;
-  double* res = (double*)malloc(rng * sizeof(double));
-  int* ind_set = (int*)malloc(rng * sizeof(int));
+  double* res = (double*)malloc(N * sizeof(double));
+  int* ind_set = (int*)malloc(N * sizeof(int));
 
   int i, ic;
   int sat = 1;
@@ -110,7 +110,7 @@ void project_range( double* xab,
   
   // if all constraints are satisfied set x = xb and quit
   if (sat){
-    for (i = low; i < high; i++){
+    for (i = 0; i < N; i++){
       b->xi[i] = xib[i];
       b->xa[i] = xab[i];
     }
