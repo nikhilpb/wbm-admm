@@ -164,8 +164,13 @@ void gen_w(){
         }
       } 
       else{
-        w[i][j] = 0.0;
-      }
+				if (w_flag){
+					w[i][j] = i - abs(i-j);
+				}
+				else{
+        	w[i][j] = 0.0;
+      	}
+			}
     }
   }
 }

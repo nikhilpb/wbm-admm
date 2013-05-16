@@ -1,20 +1,25 @@
 #include <ilcplex/ilocplex.h>
 ILOSTLBEGIN
+#include <unistd.h>
+#include <math.h>
 
 int
 main (int argc, char **argv)
 {
 	int N = 5000;
+	if (argc > 1){
+		N = atoi(argv[1]);
+	}
 	double M = 100000;
   double** w = new double*[N];
 	for (int i = 0; i < N; i++){
 		w[i] = new double[N];
 		for (int j = 0; j < N; j++){
 			if (i == j){
-				w[i][j] = i*j;
+				w[i][j] = i;
 			} 
 			else {
-				w[i][j] = i+j;
+				w[i][j] = i-abs(i-j);
 			}
 		}
 	} 
