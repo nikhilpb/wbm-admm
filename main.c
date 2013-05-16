@@ -19,16 +19,13 @@
 
 double** w;
 int w_flag;
+int ver;
 
 void gen_w();
 
 void command_line_parser(int argc, char **argv);
 
 int main(int argc, char **argv){
-
-  // default values
-
-
 
   N = 100;
   n_threads = 10;
@@ -37,7 +34,7 @@ int main(int argc, char **argv){
   tol = 0.001;
   min_tol = 0.00001;
   w_flag = 0;
-  
+  ver = 1;
 
   command_line_parser(argc, argv);
 
@@ -47,6 +44,13 @@ int main(int argc, char **argv){
           n_threads,
           blks_per_ad);
 
+	if (w_flag){
+		printf("performing weighted matching\n");
+	}
+	else {
+		printf("performing unweighted matching\n");
+	}
+	printf("tol = %f, min_tol = %f\n", tol, min_tol);	
   bc = N * blks_per_ad;
   
   int i, j, t;
@@ -68,8 +72,12 @@ int main(int argc, char **argv){
     xa_bar[i] = 0.0;
     xi_bar[i] = 0.0;
   }
+	if (ver == 1){
+  	admm_parallel_v1();
+	}	else {
+		admm_parallel_v2();
+	}
 
-  admm_parallel_v1();
 
   // printf("xa: ");
   double obj = 0.0;
@@ -98,7 +106,7 @@ void command_line_parser(int argc, char **argv){
   int index;
   int c;
   opterr = 0;
-  while ((c = getopt (argc, argv, "r:n:t:b:wlm")) != -1)
+  while ((c = getopt (argc, argv, "r:n:t:b:wl:m:v:")) != -1)
     switch (c)
     {
       case 'r':
@@ -106,7 +114,8 @@ void command_line_parser(int argc, char **argv){
         break;
       case 'n':
         N = atoi(optarg);
-      case 't':
+      	break;
+			case 't':
         n_threads = atoi(optarg);
         break;
       case 'b':
@@ -117,6 +126,9 @@ void command_line_parser(int argc, char **argv){
         break;
 			case 'l':
 				tol = atof(optarg);
+				break;
+			case 'v':
+				ver = atoi(optarg);
 				break;
 			case 'm':
 				min_tol = atof(optarg);

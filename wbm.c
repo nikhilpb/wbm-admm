@@ -58,8 +58,8 @@ void* admm_parallel_helper(void* tn){
 
 void* admm_parallel_helper_2(void* tn){
   long tid = (long)tn;
-  int low = tid * N / n_threads;
-  int high = (tid + 1) * N / n_threads;
+  int low = tid * bc / n_threads;
+  int high = (tid + 1) * bc / n_threads;
   dual_update(low, high);
   project_all(low, high, tid); 
   average_thr(low, high, tid);

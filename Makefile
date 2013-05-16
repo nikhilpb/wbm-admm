@@ -44,7 +44,7 @@ WBMFLG = -O2 -pthread
 LSTDFLG = -lstdc++ -lm -lgsl -lgslcblas
 INCLUDE = -I/usr/include/ 
 LIB = -L/usr/lib/
-OBJS = lp wbm
+OBJS = wbm-cplex.out wbm-admm.out wbm-pg.out
 
 all:	${OBJS}
 	rm -f *.o
@@ -52,11 +52,15 @@ all:	${OBJS}
 lp.o:	lp.cpp
 	$(CCC) -c $(CCFLAGS) lp.cpp -o lp.o ${INCLUDE} -I/usr/local/include -pthread
 
-lp:	lp.o
+wbm-cplex.out:	lp.o
 	$(CCC) $(CCFLAGS) lp.o -o wbm-cplex.out ${LIB} ${LSTDFLG} $(CCLNFLAGS)
 
-wbm: wbm.o block.o main.o
+wbm-admm.out: wbm.o block.o main.o
 	$(CC) $(CFLAGS) -o wbm-admm.out main.c wbm.c block.c -I. $(CLNFLAGS)
+
+wbm-pg.out: wbm.o block.o main.o
+	$(CC) $(CFLAGS) -o wbm-pg.out main.c wbm.c block.c -I. $(CLNFLAGS) -pg
+
 
 clean:
 	rm -f *.o
